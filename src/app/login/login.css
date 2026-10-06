@@ -1,0 +1,51 @@
+
+.login-page {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  
+}
+
+h3{
+  
+  /* margin-left: 93px; */
+  text-align: center;
+
+
+}
+.login-button{
+  margin-left: 109px;
+  color: blueviolet;
+  margin-top: 20px;
+}
+.username-input{
+  margin: 20px;
+  /* color: blueviolet; */
+  
+ 
+}
+.input-label{
+  padding: 5px;
+}
+.password-input{
+  margin: 20px;
+  /* color: blueviolet; */
+  
+}
+.password-label{
+  padding: 5px;
+}
+.captcha-input{
+  margin: 20px;
+}
+.captcha-label{
+  padding: 14px;
+}

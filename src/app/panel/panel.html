@@ -1,0 +1,23 @@
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="logoutbutton">
+      <a class="navbar-brand" [routerLink]="['/login']">
+        <button class="logout">خروح</button>
+      </a>
+    </div>
+
+    <div class="createnewsbutton">
+      <a class="navbar-brand" [routerLink]="['/save_news']">
+        <button class="save">ثبت</button>
+      </a>
+    </div>
+    <div class="username">
+      <h1>{{ user()?.name }}</h1>
+    </div>
+
+  </nav>
+</div>
+
+
+<router-outlet></router-outlet>

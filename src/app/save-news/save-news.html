@@ -1,0 +1,52 @@
+
+<div dir="rtl" style="max-width: 600px; margin: 0 auto;">
+
+
+    <form (ngSubmit)="submit()">
+        <div class="subject" >
+            <label >عنوان</label>
+            <input  [(ngModel)]="title" name="title" required />
+        </div>
+        <div >
+            <label >خلاصه</label>
+            <textarea class="form-control" [(ngModel)]="abstract" name="abstract" required></textarea>
+        </div>
+        <div class="tages">
+            <label >برچسب‌ها</label>
+            <input  [(ngModel)]="tagInput" name="tags"
+                (keydown.enter)="addTag(); $event.preventDefault()" />
+            <div >
+                @for (tag of tags; track tag) {
+                <span >
+                    {{ tag }}
+                    <button type="button"
+                        (click)="removeTag(tag)"></button>
+                </span>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تاریخ انتشار</label>
+            <input type="datetime-local" class="form-control" [(ngModel)]="created" name="created" required />
+        </div>
+        <div >
+            <label >تصویر خبر</label>
+            <input type="file"  accept="image/*" (change)="onFileSelected($event)" />
+        </div>
+
+        @if (message()) {
+        <p [class.text-danger]="isError()">{{ message() }}</p>
+        }
+
+        <button style="margin: 20px; background-color: aqua;" type="submit">ثبت خبر</button>
+
+        <button style="background-color: brown;"> <a routerLink="/panel_news">انصراف</a></button>
+    </form>
+</div>
+
+
+
+
+
+
+<router-outlet></router-outlet>

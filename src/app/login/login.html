@@ -1,0 +1,47 @@
+<div class="login-page">
+<div class="login-box">
+  <div class="card p-4">
+    <h3 class="mb-3">ورود  </h3>
+
+
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="username-input">
+        <label class="input-label">نام کاربری</label>
+        <input class="form-control" [(ngModel)]="username" name="username" required />
+      </div>
+      <div class="password-input">
+        <label class="password-label">رمز عبور</label>
+        <input type="password" class="form-control" [(ngModel)]="password" name="password" required />
+      </div>
+      <div class="captcha-input">
+        <label class="captcha-label">کد کپچا</label>
+        <input class="form-control" [(ngModel)]="captcha" name="captcha" required />
+        <br> 
+        <button class="login-button" type="submit" >ورود</button>
+      </div>
+      <br>
+      <hr>
+      
+    </form>
+
+    @if (captchaUrl()) {
+    <img [src]="captchaUrl()" alt="captcha"  />
+    }
+    <!-- <button (click)="loadCaptcha()">🔄 کپچای جدید</button> -->
+
+    <!-- @if (message()) {
+    <p class="mt-2" [class.text-danger]="isError()" [class.text-success]="!isError()">
+      {{ message() }}
+    </p>
+    } -->
+
+    <!-- @if (currentUser()) {
+    <div class="alert alert-info mt-3">
+      <strong>کاربر فعلی:</strong>
+      <pre>{{ currentUser() | json }}</pre>
+    </div>
+    } -->
+  </div>
+</div>
+</div>
