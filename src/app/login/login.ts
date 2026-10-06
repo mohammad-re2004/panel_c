@@ -1,39 +1,51 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CaptchaService } from '../services/captcha';
 import { Auth } from '../services/auth';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule,ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login implements OnInit {
-  captchaUrl = signal<string>('');
-  message! :string;
-  isError :boolean = false;
+  captchaUrl = signal('');
+  message = signal('');
+  isError = signal(false);
+  private fb = inject(FormBuilder)
 
-  username = '';
-  password = '';
-  captcha = '';
+  loginForm = this.fb.nonNullable.group({
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    captcha: ['', [Validators.required]],
+  });
 
-  constructor(private captchaService: CaptchaService, private authService: Auth,  private router: Router,) { }
+
+
+  constructor(
+
+    private captchaService: CaptchaService,
+    private authService: Auth,
+    private router: Router
+  ) { }
+
+
+
+
+
+
 
   ngOnInit(): void {
     this.loadCaptcha();
   }
 
-  public loadCaptcha(): void {
+  loadCaptcha(): void {
     this.captchaService.getCaptcha().subscribe({
-      next: (blob) => {
-        this.captchaUrl.set(URL.createObjectURL(blob));
-      },
-      error: (err) => {
-        console.error('خطا در دریافت کپچا:', err);
-      },
+      next: (blob) => this.captchaUrl.set(URL.createObjectURL(blob)),
+      error: (err) => console.error('خطا در دریافت کپچا:', err),
     });
   }
   ///////////////////////
@@ -41,35 +53,23 @@ export class Login implements OnInit {
   currentUser = signal<any>(null);
 
   onSubmit(): void {
-  //  this.message = "";
-    this.authService
-      .login({ username: this.username, password: this.password, captcha: this.captcha })
-      .subscribe({
-        next: (res) => {
-          this.authService.setTokenCookie(res.token);
-          // حالا که توکن داریم، رهگیر خودش هدر رو می‌ذاره → درخواست کاربر فعلی:
-          // this.authService.getUser().subscribe({
-          //   next: (user) => {
-          //     this.currentUser.set(user);
-          //     this.isError.set(false);
-          //     this.message.set('ورود موفق ✅');
-          //   },
-          //   error: () => {
-          //     this.isError.set(true);
-          //     this.message.set('ورود موفق بود، ولی دریافت کاربر ناموفق ❌');
-          //   },
-          // });
-          
-          this.router.navigate(['/panel_news']);
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();   // «همه فیلدها رو لمس‌شده علامت بزن تا خطاها دیده بشن»
+      return;
+    }
 
-        },
-        error: (err) => {
-          this.isError=(true);
-           alert("خطا")
-          // this.message=('ورود ناموفق ❌ (کد: ' + err.status + ')');
-          this.loadCaptcha();
-         
-        },
-      });
+    const { username, password, captcha } = this.loginForm.getRawValue();
+    this.message.set('');
+    this.authService.login({ username, password, captcha }).subscribe({
+      next: (res) => {
+        this.authService.setTokenCookie(res.token);
+        this.router.navigate(['/panel_news']);
+      },
+      error: (err) => {
+        this.isError.set(true);
+        this.message.set('ورود ناموفق ❌ (کد: ' + err.status + ')');
+        this.loadCaptcha();
+      },
+    });
   }
 }

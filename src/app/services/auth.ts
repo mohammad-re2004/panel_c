@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Cookie } from './cookie';
 
 
 
@@ -21,26 +22,27 @@ export interface LoginResponse {
 export class Auth {
   private http = inject(HttpClient);
   private baseUrl = 'https://api-efafcollege.mionik.ir';
+  private cookieService = inject(Cookie);
+  private tokenCookieName = 'token';
+
 
 
   public login(body: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/v1/panel/auth/login`, body);
   }
 
-  setTokenCookie(token: string, days = 5): void {
-    const maxAge = days * 24 * 60 * 60;   // ۵ روز به ثانیه
-    document.cookie = `token=${encodeURIComponent(token)}; max-age=${maxAge}; path=/`;
+  setTokenCookie(token: string): void {
+    this.cookieService.set(this.tokenCookieName, token, 5);
   }
 
   getTokenFromCookie(): string | null {
-    const match = document.cookie.match(/(^| )token=([^;]+)/);
-    return match ? decodeURIComponent(match[2]) : null;
+    return this.cookieService.get(this.tokenCookieName);
   }
+
 
   clearTokenCookie(): void {
-    document.cookie = 'token=; max-age=0; path=/';
+    this.cookieService.remove(this.tokenCookieName);
   }
-
   getUser(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/v1/web/users`);
   }

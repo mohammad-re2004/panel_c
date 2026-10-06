@@ -1,47 +1,42 @@
-<div class="login-page">
-<div class="login-box">
+<div class="container mt-5" style="max-width: 400px;">
   <div class="card p-4">
-    <h3 class="mb-3">ورود  </h3>
-
-
-
-    <form (ngSubmit)="onSubmit()">
-      <div class="username-input">
-        <label class="input-label">نام کاربری</label>
-        <input class="form-control" [(ngModel)]="username" name="username" required />
-      </div>
-      <div class="password-input">
-        <label class="password-label">رمز عبور</label>
-        <input type="password" class="form-control" [(ngModel)]="password" name="password" required />
-      </div>
-      <div class="captcha-input">
-        <label class="captcha-label">کد کپچا</label>
-        <input class="form-control" [(ngModel)]="captcha" name="captcha" required />
-        <br> 
-        <button class="login-button" type="submit" >ورود</button>
-      </div>
-      <br>
-      <hr>
-      
-    </form>
+    <h3 class="mb-3">ورود به پنل</h3>
 
     @if (captchaUrl()) {
-    <img [src]="captchaUrl()" alt="captcha"  />
+      <img [src]="captchaUrl()" alt="captcha" class="img-fluid border rounded mb-2" />
     }
-    <!-- <button (click)="loadCaptcha()">🔄 کپچای جدید</button> -->
+    <button class="btn btn-secondary btn-sm mb-3" (click)="loadCaptcha()">🔄 کپچای جدید</button>
 
-    <!-- @if (message()) {
-    <p class="mt-2" [class.text-danger]="isError()" [class.text-success]="!isError()">
-      {{ message() }}
-    </p>
-    } -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-2">
+        <label class="form-label">نام کاربری</label>
+        <input class="form-control" formControlName="username" />
+        @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
+          <small class="text-danger">نام کاربری: حداقل ۳ حرف</small>
+        }
+      </div>
 
-    <!-- @if (currentUser()) {
-    <div class="alert alert-info mt-3">
-      <strong>کاربر فعلی:</strong>
-      <pre>{{ currentUser() | json }}</pre>
-    </div>
-    } -->
+      <div class="mb-2">
+        <label class="form-label">رمز عبور</label>
+        <input type="password" class="form-control" formControlName="password" />
+        @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+          <small class="text-danger">رمز عبور: حداقل ۶ حرف</small>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">کد کپچا</label>
+        <input class="form-control" formControlName="captcha" />
+        @if (loginForm.controls.captcha.touched && loginForm.controls.captcha.invalid) {
+          <small class="text-danger">کد کپچا رو وارد کن</small>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">ورود</button>
+    </form>
+
+    @if (message()) {
+      <p class="mt-2" [class.text-danger]="isError()">{{ message() }}</p>
+    }
   </div>
-</div>
 </div>
