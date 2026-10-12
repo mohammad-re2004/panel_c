@@ -2,7 +2,7 @@ import { Component, computed, OnInit, signal } from '@angular/core';
 import { Panel } from '../panel/panel';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { NewsService } from '../services/news';
-import { PagedNews } from '../interfaces/news_interface';
+import { News, PagedNews } from '../interfaces/news_interface';
 import { DatePipe } from '@angular/common';
 
 
@@ -68,6 +68,22 @@ export class NewsPanel implements OnInit {
     month: '2-digit',
     day: '2-digit'
   }).format(new Date(date));
+}
+
+deleteNews(news: News): void {
+  if (!confirm(`خبر «${news.title}» برای همیشه حذف بشه؟`)) return;
+
+  this.news_service.deleteNews(news.id).subscribe({
+    next: () => this.loadnews(),
+    complete() {
+      alert("حذف موفق")
+    },
+      // لیست رو از نو بخون تا صفحه‌بندی هم درست بمونه
+    error: (err) => {
+      console.error('حذف ناموفق:', err);
+      alert('حذف ناموفق بود! (کد: ' + err.status + ')');
+    },
+  });
 }
 
 

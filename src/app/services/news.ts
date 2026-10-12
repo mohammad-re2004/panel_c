@@ -11,20 +11,24 @@ export class NewsService {
   private http = inject(HttpClient);
   private baseUrl = 'https://api-efafcollege.mionik.ir';
 
-  
+
   getAllnews(filter: NewsFilter): Observable<PagedNews> {
     return this.http.post<PagedNews>(`${this.baseUrl}/v1/panel/news/all`, filter);
   }
 
   createNews(form: FormData): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/v1/panel/news`, form);
+    return this.http.post<any>(`${this.baseUrl}/v1/panel/news`, form);
   }
 
   getNews(id: string): Observable<News> {
-  return this.http.get<News>(`${this.baseUrl}/v1/panel/news/${id}`);
-}
+    return this.http.get<News>(`${this.baseUrl}/v1/panel/news/${id}`);
+  }
 
-updateNews(id: string, form: FormData): Observable<any> {
-  return this.http.put<any>(`${this.baseUrl}/v1/panel/news/${id}`, form);
-}
+  updateNews(id: string, form: FormData): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/v1/panel/news/${id}`, form);
+  }
+
+  deleteNews(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/v1/panel/news/${id}`);
+  }
 }

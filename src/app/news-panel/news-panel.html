@@ -45,7 +45,7 @@
             <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td>
             <td>
               <a class="btn btn-sm btn-outline-primary me-1" style="margin: 20px;" [routerLink]="['/news/edit', news.id]">✏️ ویرایش</a>
-              <button class="btn btn-sm btn-outline-danger">🗑️ حذف</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(news)">🗑️ حذف</button>
             </td>
           </tr>
         }
