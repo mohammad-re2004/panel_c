@@ -9,7 +9,7 @@ export class Savenews {
   private http = inject(HttpClient);
   private baseUrl = 'https://api-efafcollege.mionik.ir';
 
-  createNews(form: FormData): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/v1/panel/news`, form);
+  // createNews(form: FormData): Observable<any> {
+  // return this.http.post<any>(`${this.baseUrl}/v1/panel/news`, form);
 }
-}
+

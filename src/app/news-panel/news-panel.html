@@ -11,10 +11,13 @@
 
   @let r = result();
 
-  <div class="container mt-4" dir="rtl">
- 
+<div class="container mt-4" dir="rtl">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>صفحه اخبار 📰</h1>
+    <a [routerLink]="['/save_news']" class="btn btn-success">+ خبر جدید</a>
+  </div>
 
-    @if (r) {
+  @if (r) {
     <table class="table table-striped align-middle">
       <thead>
         <tr>
@@ -22,50 +25,52 @@
           <th>عنوان</th>
           <th>خلاصه</th>
           <th>برچسب‌ها</th>
-          <th>تاریخ انتشار</th>
+          <th>تاریخ ثبت</th>
+          <th>عملیات</th>
         </tr>
       </thead>
       <tbody>
         @for (news of r.data; track news.id) {
-        <tr>
-          <td>
-            <img [src]="news.image"  style="width: 48px; height: 48px; " />
-          </td>
-          <td>{{ news.title }}</td>
-          <td>{{ news.abstract }}</td>
-          <td>
-            @for (tag of news.tags; track tag) {
-            <span class="badge bg-secondary me-1">{{ tag }}</span>
-            }
-          </td>
-          <!-- <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td> -->
-          <td>{{ toPersianDate(news.time.created) }}</td>
-        </tr>
+          <tr>
+            <td>
+              <img [src]="news.image" class="rounded" style="width: 48px; height: 48px; object-fit: cover;" />
+            </td>
+            <td>{{ news.title }}</td>
+            <td>{{ news.abstract }}</td>
+            <td>
+              @for (tag of news.tags; track tag) {
+                <span class="badge bg-secondary me-1">{{ tag }}</span>
+              }
+            </td>
+            <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td>
+            <td>
+              <a class="btn btn-sm btn-outline-primary me-1" style="margin: 20px;" [routerLink]="['/news/edit', news.id]">✏️ ویرایش</a>
+              <button class="btn btn-sm btn-outline-danger">🗑️ حذف</button>
+            </td>
+          </tr>
         }
       </tbody>
     </table>
 
-    <div class="pagesbar">
-      <nav>
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="r.page <= 1">
-            <button class="page-link" (click)="goToPage(r.page - 1)">قبلی</button>
-          </li>
-          @for (p of pages(); track p) {
+    <nav>
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="r.page <= 1">
+          <button class="page-link" (click)="goToPage(r.page - 1)">قبلی</button>
+        </li>
+        @for (p of pages(); track p) {
           <li class="page-item" [class.active]="p === r.page">
             <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
           </li>
-          }
-          <li class="page-item" [class.disabled]="r.page >= r.totalPages">
-            <button class="page-link" (click)="goToPage(r.page + 1)">بعدی</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    } @else {
-    <p>در حال دریافتا</p>
-    }
-  </div>
+        }
+        <li class="page-item" [class.disabled]="r.page >= r.totalPages">
+          <button class="page-link" (click)="goToPage(r.page + 1)">بعدی</button>
+        </li>
+      </ul>
+    </nav>
+  } @else {
+    <p>در حال دریافت خبرها... ⏳</p>
+  }
+</div>
 
 
   <router-outlet></router-outlet>

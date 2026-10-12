@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Savenews } from '../services/savenews';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NewsService } from '../services/news';
 
 @Component({
   selector: 'app-save-news',
@@ -19,7 +20,7 @@ export class SaveNews {
   message = signal('');
   isError = signal(false);
   constructor(
-    private savenews_service: Savenews,
+    private savenews_service: NewsService,
     private router: Router
 
   ) { }

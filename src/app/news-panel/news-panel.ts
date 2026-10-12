@@ -1,13 +1,14 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { Panel } from '../panel/panel';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { NewsService } from '../services/news';
 import { PagedNews } from '../interfaces/news_interface';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-news-panel',
-  imports: [Panel, RouterOutlet,],
+  imports: [Panel, RouterOutlet, DatePipe, RouterLinkWithHref],
   templateUrl: './news-panel.html',
   styleUrl: './news-panel.css',
 })
