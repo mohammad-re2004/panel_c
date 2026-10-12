@@ -42,10 +42,11 @@
                 <span class="badge bg-secondary me-1">{{ tag }}</span>
               }
             </td>
-            <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td>
+            <!-- <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td> -->
+            <td [appShamsiDate]="news.time.created"></td>
             <td>
               <a class="btn btn-sm btn-outline-primary me-1" style="margin: 20px;" [routerLink]="['/news/edit', news.id]">✏️ ویرایش</a>
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(news)">🗑️ حذف</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(news)"> حذف</button>
             </td>
           </tr>
         }

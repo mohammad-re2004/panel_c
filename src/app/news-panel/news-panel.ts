@@ -4,11 +4,12 @@ import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { NewsService } from '../services/news';
 import { News, PagedNews } from '../interfaces/news_interface';
 import { DatePipe } from '@angular/common';
+import { ShamsiDate } from '../directives/shamsi-date';
 
 
 @Component({
   selector: 'app-news-panel',
-  imports: [Panel, RouterOutlet, DatePipe, RouterLinkWithHref],
+  imports: [Panel, RouterOutlet, DatePipe, RouterLinkWithHref,ShamsiDate],
   templateUrl: './news-panel.html',
   styleUrl: './news-panel.css',
 })
@@ -71,7 +72,7 @@ export class NewsPanel implements OnInit {
 }
 
 deleteNews(news: News): void {
-  if (!confirm(`خبر «${news.title}» برای همیشه حذف بشه؟`)) return;
+  if (!confirm(`خبر «${news.title}»  حذف شود؟`)) return;
 
   this.news_service.deleteNews(news.id).subscribe({
     next: () => this.loadnews(),
