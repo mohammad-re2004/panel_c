@@ -12,9 +12,11 @@
   @let r = result();
 
 <div class="container mt-4" dir="rtl">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>صفحه اخبار 📰</h1>
-    <a [routerLink]="['/save_news']" class="btn btn-success">+ خبر جدید</a>
+  <div dir="ltr" >
+   
+   <button> 
+     <a [routerLink]="['/save_news']" >+ خبر جدید</a>
+   </button>
   </div>
 
   @if (r) {
@@ -45,7 +47,7 @@
             <!-- <td>{{ news.time.created | date: 'yyyy/MM/dd' }}</td> -->
             <td [appShamsiDate]="news.time.created"></td>
             <td>
-              <a class="btn btn-sm btn-outline-primary me-1" style="margin: 20px;" [routerLink]="['/news/edit', news.id]">✏️ ویرایش</a>
+              <a class="btn btn-sm btn-outline-primary me-1" style="margin: 20px;" [routerLink]="['/news/edit', news.id]">ویرایش</a>
               <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(news)"> حذف</button>
             </td>
           </tr>
@@ -69,7 +71,7 @@
       </ul>
     </nav>
   } @else {
-    <p>در حال دریافت خبرها... ⏳</p>
+    <p>در حال دریافت خبرها... </p>
   }
 </div>
 

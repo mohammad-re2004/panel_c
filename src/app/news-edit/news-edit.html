@@ -1,58 +1,46 @@
 <div class="container mt-4" style="max-width: 600px;" dir="rtl">
-  <h1>ویرایش خبر 🖊️</h1>
+
 
   @if (loading()) {
-    <p>در حال دریافت خبر... ⏳</p>
+  <p>در حال دریافت خبر...</p>
   } @else {
-    <form [formGroup]="editForm" (ngSubmit)="submit()">
-      @if (currentImage()) {
-        <div class="mb-3">
-         
-          <img [src]="currentImage()" class="rounded" style="width: 96px; height: 96px; object-fit: cover;" />
-        </div>
+  <form [formGroup]="editForm" (ngSubmit)="submit()">
+    @if (currentImage()) {
+
+    <div class="mb-3">
+      <img [src]="currentImage()" class="rounded" style="width: 96px; height: 96px; object-fit: cover;" />
+    </div>
+    }
+
+    <div class="mb-3">
+      <label class="form-label">عنوان</label>
+      <input class="form-control" formControlName="title" />
+
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">خلاصه</label>
+      <textarea class="form-control" formControlName="abstract"></textarea>
+      @if (editForm.controls.abstract.touched && editForm.controls.abstract.invalid) {
+      <small class="text-danger">خلاصه رو پر کن</small>
       }
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">عنوان</label>
-        <input class="form-control" formControlName="title" />
-        @if (editForm.controls.title.touched && editForm.controls.title.invalid) {
-          <small class="text-danger">عنوان: حداقل ۳ حرف</small>
+    <div class="mb-3">
+      <label class="form-label">برچسب‌ها</label>
+      <input class="form-control" [(ngModel)]="tagInput" [ngModelOptions]="{ standalone: true }"
+        (keydown.enter)="addTag(); $event.preventDefault()" />
+      <div class="mt-2">
+        @for (tag of tags; track tag) {
+        <span>
+          {{ tag }}
+          <button type="button" (click)="removeTag(tag)"></button>
+        </span>
         }
       </div>
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">خلاصه</label>
-        <textarea class="form-control" formControlName="abstract"></textarea>
-        @if (editForm.controls.abstract.touched && editForm.controls.abstract.invalid) {
-          <small class="text-danger">خلاصه رو پر کن</small>
-        }
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">برچسب‌ها</label>
-        <input
-          class="form-control"
-          [(ngModel)]="tagInput"
-          [ngModelOptions]="{ standalone: true }"
-          placeholder="بنویس و Enter بزن..."
-          (keydown.enter)="addTag(); $event.preventDefault()"
-        />
-        <div class="mt-2">
-          @for (tag of tags; track tag) {
-            <span class="badge bg-primary me-1 d-inline-flex align-items-center">
-              {{ tag }}
-              <button
-                type="button"
-                class="btn-close btn-close-white ms-1"
-                style="font-size: 0.6rem"
-                (click)="removeTag(tag)"
-              ></button>
-            </span>
-          }
-        </div>
-      </div>
-
-      <div class="mb-3">
+    <!-- <div class="mb-3">
         <label class="form-label">تاریخ انتشار</label>
         <input
           type="datetime-local"
@@ -60,20 +48,32 @@
           [(ngModel)]="created"
           [ngModelOptions]="{ standalone: true }"
         />
+      </div> -->
+    <div class="mb-3">
+      <label class="form-label">تاریخ انتشار (شمسی)</label>
+      <div class="d-flex gap-2 align-items-center">
+        <qeydar-date-picker [(ngModel)]="jDate" [ngModelOptions]="{ standalone: true }"
+          [calendarType]="'jalali'"></qeydar-date-picker>
+        <input type="time" class="form-control" style="max-width: 130px" [(ngModel)]="time"
+          [ngModelOptions]="{ standalone: true }" />
       </div>
+      <small class="text-muted">معادل میلادی (فرمت ارسال به سرور): {{ jDate }}</small>
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">تصویر جدید (اختیاری)</label>
-        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
-      </div>
+    <div class="mb-3">
+      <label class="form-label">تصویر جدید (اختیاری)</label>
+      <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+    </div>
 
-      @if (message()) {
-        <p [class.text-danger]="isError()">{{ message() }}</p>
-      }
+    @if (message()) {
+    <p [class.text-danger]="isError()">{{ message() }}</p>
+    }
 
-      <button type="submit" class="btn btn-primary" >ذخیره تغییرات</button>
-      <a routerLink="/panel_news" class="btn btn-secondary ms-2">انصراف</a>
-      <!-- <a [routerLink]="['/panel_news']" class="btn btn-secondary ms-2">انصراف</a> -->
-    </form>
+    <button style="margin: 15px ; background-color: aqua;" type="submit">ذخیره تغییرات</button>
+    <button style="background-color: brown;">
+      <a routerLink="/panel_news">انصراف</a>
+    </button>
+    <!-- <a [routerLink]="['/panel_news']" class="btn btn-secondary ms-2">انصراف</a> -->
+  </form>
   }
 </div>

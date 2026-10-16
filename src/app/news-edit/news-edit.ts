@@ -1,11 +1,13 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewsService } from '../services/news';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { gregorianToShamsi, shamsiStringToGregorian, shamsiToGregorian, todayShamsiString } from '../utils/shamsi_data';
+import { QeydarDatePickerModule } from '@qeydar/datepicker';
 
 @Component({
   selector: 'app-news-edit',
-  imports: [ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink, QeydarDatePickerModule],
   templateUrl: './news-edit.html',
   styleUrl: './news-edit.css',
 })
@@ -24,7 +26,22 @@ export class NewsEdit implements OnInit {
 
   tags: string[] = [];
   tagInput = '';
-  created = '';
+  // shamsiYears = Array.from({ length: 11 }, (_, i) => 1400 + i);   // ۱۴۰۰ تا ۱۴۱۰
+  // shamsiMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+  // shamsiDays = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  // shYear = 1404;
+  // shMonth = 1;
+  // // shDay = 1;
+  // jDate: string = todayShamsiString();
+  jDate = '';
+  time = '12:00';
+
+  get gregorianPreview(): string {
+    const g = shamsiStringToGregorian(this.jDate);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${g.gy}/${pad(g.gm)}/${pad(g.gd)}`;
+  }
 
   imageFile: File | null = null;
   currentImage = signal('');
@@ -38,8 +55,13 @@ export class NewsEdit implements OnInit {
         this.editForm.setValue({ title: news.title, abstract: news.abstract });
         this.tags = [...news.tags];
         this.currentImage.set(news.image);
-        // "2026-09-11T14:55:00Z" → "2026-09-11T14:55" برای datetime-local
-        this.created = news.time.created.slice(0, 16);
+
+        // this.created = news.time.created.slice(0, 16);
+
+        const d = new Date(news.time.created);
+        const pad = (n: number) => String(n).padStart(2, '0');
+        this.jDate = news.time.created.slice(0, 10).replaceAll('-', '/');
+        this.time = news.time.created.slice(11, 16);
         this.loading.set(false);
       },
       error: () => {
@@ -51,7 +73,7 @@ export class NewsEdit implements OnInit {
   }
 
 
-   addTag(): void {
+  addTag(): void {
     const value = this.tagInput.trim();
     this.tagInput = '';
     if (!value || this.tags.includes(value)) return;
@@ -79,7 +101,11 @@ export class NewsEdit implements OnInit {
     fd.append('title', this.editForm.controls.title.value);
     fd.append('abstract', this.editForm.controls.abstract.value);
     this.tags.forEach((t) => fd.append('tags', t));
-    fd.append('created', this.created.replace('T', ' '));
+    // fd.append('created', this.created.replace('T', ' '));
+    const g = shamsiStringToGregorian(this.jDate);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    // fd.append('created', `${g.gy}-${pad(g.gm)}-${pad(g.gd)} ${this.time}`);
+    fd.append('created', `${this.jDate.replaceAll('/', '-')} ${this.time}`);
 
     this.newsService.updateNews(this.newsId, fd).subscribe({
       next: () => this.router.navigate(['/panel_news']),

@@ -1,18 +1,15 @@
 <div class="container mt-5" style="max-width: 400px;">
-  <div class="card p-4">
-    <h3 class="mb-3">ورود به پنل</h3>
+  <div >
+    <h3 >ورود به پنل</h3>
 
-    @if (captchaUrl()) {
-      <img [src]="captchaUrl()" alt="captcha" class="img-fluid border rounded mb-2" />
-    }
-    <button class="btn btn-secondary btn-sm mb-3" (click)="loadCaptcha()">🔄 کپچای جدید</button>
+
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-2">
         <label class="form-label">نام کاربری</label>
         <input class="form-control" formControlName="username" />
         @if (loginForm.controls.username.touched && loginForm.controls.username.invalid) {
-          <small class="text-danger">نام کاربری: حداقل ۳ حرف</small>
+        <small >نام کاربری حداقل ۳ کاراکتر</small>
         }
       </div>
 
@@ -20,23 +17,30 @@
         <label class="form-label">رمز عبور</label>
         <input type="password" class="form-control" formControlName="password" />
         @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
-          <small class="text-danger">رمز عبور: حداقل ۶ حرف</small>
+        <small >رمز حداقل 6 کاراکتر</small>
         }
       </div>
 
       <div class="mb-3">
         <label class="form-label">کد کپچا</label>
         <input class="form-control" formControlName="captcha" />
-        @if (loginForm.controls.captcha.touched && loginForm.controls.captcha.invalid) {
-          <small class="text-danger">کد کپچا رو وارد کن</small>
-        }
+        
+       
+        
+
+        <div style="margin-top:15px;">
+          @if (captchaUrl()) {
+          <img [src]="captchaUrl()" alt="captcha"  />
+          }
+          <!-- <button class="btn btn-secondary btn-sm mb-3" (click)="loadCaptcha()">🔄 کپچای جدید</button> -->
+        </div>
       </div>
 
       <button type="submit" class="btn btn-primary w-100">ورود</button>
     </form>
 
     @if (message()) {
-      <p class="mt-2" [class.text-danger]="isError()">{{ message() }}</p>
+    <p class="mt-2" [class.text-danger]="isError()">{{ message() }}</p>
     }
   </div>
 </div>

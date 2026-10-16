@@ -1,37 +1,48 @@
-
-<div dir="rtl" style="max-width: 600px; margin: 0 auto;">
+<div class="container mt-4" style="max-width: 600px;" dir="rtl">
 
 
     <form (ngSubmit)="submit()">
-        <div class="subject" >
-            <label >عنوان</label>
-            <input  [(ngModel)]="title" name="title" required />
+        <div class="subject">
+            <label>عنوان</label>
+            <input [(ngModel)]="title" name="title" required />
         </div>
-        <div >
-            <label >خلاصه</label>
+        <div>
+            <label>خلاصه</label>
             <textarea class="form-control" [(ngModel)]="abstract" name="abstract" required></textarea>
         </div>
         <div class="tages">
-            <label >برچسب‌ها</label>
-            <input  [(ngModel)]="tagInput" name="tags"
-                (keydown.enter)="addTag(); $event.preventDefault()" />
-            <div >
+            <label>برچسب‌ها</label>
+            <input [(ngModel)]="tagInput" name="tags" (keydown.enter)="addTag(); $event.preventDefault()" />
+            <div>
                 @for (tag of tags; track tag) {
-                <span >
+                <span>
                     {{ tag }}
-                    <button type="button"
-                        (click)="removeTag(tag)"></button>
+                    <button type="button" (click)="removeTag(tag)"></button>
                 </span>
                 }
             </div>
         </div>
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label class="form-label">تاریخ انتشار</label>
             <input type="datetime-local" class="form-control" [(ngModel)]="created" name="created" required />
+        </div> -->
+
+        <!--  -->
+        <div class="mb-3">
+            <label class="form-label">تاریخ انتشار (شمسی)</label>
+            <div class="d-flex gap-2 align-items-center">
+                <qeydar-date-picker [(ngModel)]="jDate" [ngModelOptions]="{ standalone: true }"
+                    [calendarType]="'jalali'"></qeydar-date-picker>
+                <input type="time" class="form-control" style="max-width: 130px" [(ngModel)]="time"
+                    [ngModelOptions]="{ standalone: true }" />
+            </div>
+            <small class="text-muted">معادل میلادی (فرمت ارسال به سرور): {{ jDate }}</small>
         </div>
-        <div >
-            <label >تصویر خبر</label>
-            <input type="file"  accept="image/*" (change)="onFileSelected($event)" />
+        <!--  -->
+        <div>
+            <label>تصویر خبر</label>
+            <!-- <input type="file" accept="image/*" (change)="onFileSelected($event)" /> -->
+            <app-image-uploader (fileSelected)="onFileSelected($event)" />
         </div>
 
         @if (message()) {

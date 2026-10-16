@@ -65,9 +65,13 @@ export class Login implements OnInit {
         this.authService.setTokenCookie(res.token);
         this.router.navigate(['/panel_news']);
       },
+      complete() {
+        alert("ورود موفق")
+      },
       error: (err) => {
         this.isError.set(true);
-        this.message.set('ورود ناموفق ❌ (کد: ' + err.status + ')');
+        this.message.set('ورود ناموفق : ' + err.status + ')');
+        
         this.loadCaptcha();
       },
     });

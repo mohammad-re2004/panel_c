@@ -1,65 +1,52 @@
-// نمایش تاریخ شمسی با اعداد فارسی: "۱۳۹۹/۱۱/۱۹"
+import moment from 'moment-jalaali';
+
+// اعداد فارسی در نمایش (۱۴۰۴ به جای 1404)
+moment.loadPersian({ usePersianDigits: true });
+
+// نمایش: ISO میلادی → رشته شمسی فارسی
 export function toShamsiDisplay(iso: string): string {
-  return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-    timeZone: 'Asia/Tehran',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date(iso));
+  return moment(iso).format('jYYYY/jMM/jDD');
 }
 
-// اجزای عددی شمسی (به درد پر کردن selectها می‌خوره، اگه روزی خواستیم)
+// پر کردن selectها: ISO میلادی → اجزای عددی شمسی
 export function gregorianToShamsi(iso: string): { jy: number; jm: number; jd: number } {
-  const parts = new Intl.DateTimeFormat('en-US-u-ca-persian', {
-    timeZone: 'Asia/Tehran',
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  }).formatToParts(new Date(iso));
-  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
-  return { jy: get('year'), jm: get('month'), jd: get('day') };
+  const m = moment(iso);
+  return { jy: m.jYear(), jm: m.jMonth() + 1, jd: m.jDate() };
 }
 
-// شمسی → میلادی (برای فرستادن به سرور) — این یکی تست‌شده و درسته، دست نزن
+// ارسال به سرور: اجزای شمسی → اجزای میلادی
 export function shamsiToGregorian(
   jy: number,
   jm: number,
   jd: number
 ): { gy: number; gm: number; gd: number } {
-  jy += 1595;
-  let days =
-    -355668 +
-    365 * jy +
-    Math.floor(jy / 33) * 8 +
-    Math.floor(((jy % 33) + 3) / 4) +
-    jd +
-    (jm < 7 ? (jm - 1) * 31 : (jm - 7) * 30 + 186);
-
-  let gy = 400 * Math.floor(days / 146097);
-  days %= 146097;
-
-  if (days > 36524) {
-    gy += 100 * Math.floor(--days / 36524);
-    days %= 36524;
-    if (days >= 365) days++;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const m = moment(`${jy}/${pad(jm)}/${pad(jd)}`, 'jYYYY/jMM/jDD', true);
+  if (!m.isValid()) {
+    console.warn('تاریخ شمسی نامعتبر:', jy, jm, jd);
+    return { gy: 2025, gm: 1, gd: 1 };
   }
+  return { gy: m.year(), gm: m.month() + 1, gd: m.date() };
+}
 
-  gy += 4 * Math.floor(days / 1461);
-  days %= 1461;
+/////
 
-  if (days > 365) {
-    gy += Math.floor((days - 1) / 365);
-    days = (days - 1) % 365;
-  }
 
-  let gd = days + 1;
-  const monthDays = [
-    0, 31,
-    (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0 ? 29 : 28,
-    31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
-  ];
-  let gm = 0;
-  for (gm = 0; gm < 13 && gd > monthDays[gm]; gm++) gd -= monthDays[gm];
+// امروز شمسی به صورت رشته (برای پیش‌فرض فرم ثبت)
+export function todayShamsiString(): string {
+  const j = gregorianToShamsi(new Date().toISOString());
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${j.jy}/${pad(j.jm)}/${pad(j.jd)}`;
+}
 
-  return { gy, gm, gd };
+// رشته شمسی مثل "1404-07-16" → اجزای میلادی
+export function shamsiStringToGregorian(jalali: string): { gy: number; gm: number; gd: number } {
+  const [jy, jm, jd] = jalali.split('/').map(Number);
+  return shamsiToGregorian(jy, jm, jd);
+}
+
+export function todayGregorianString(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())}`;
 }

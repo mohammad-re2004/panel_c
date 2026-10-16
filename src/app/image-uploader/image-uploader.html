@@ -1,0 +1,24 @@
+<div
+  class="dropzone"
+  [class.dragging]="isDragging()"
+  (click)="fileInput.click()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <input #fileInput type="file" accept="image/*" (change)="onFileInput($event)" />
+
+  @if (localPreview()) {
+    <div>
+      <img [src]="localPreview()" alt="preview" />
+     
+    </div>
+  } @else if (preview) {
+    <div>
+      <img [src]="preview" alt="current" />
+      <p>تصویر فعلی</p>
+    </div>
+  } @else {
+    <p>تصویر بیداز یا کلیک</p>
+  }
+</div>

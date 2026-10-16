@@ -1,0 +1,26 @@
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafafa;
+}
+
+.dropzone:hover,
+.dropzone.dragging {
+  border-color: #0d6efd;
+  background: #e7f1ff;
+}
+
+.dropzone img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+input[type="file"] {
+  display: none;
+}

@@ -79,7 +79,7 @@ deleteNews(news: News): void {
     complete() {
       alert("حذف موفق")
     },
-      // لیست رو از نو بخون تا صفحه‌بندی هم درست بمونه
+
     error: (err) => {
       console.error('حذف ناموفق:', err);
       alert('حذف ناموفق بود! (کد: ' + err.status + ')');

@@ -5,7 +5,7 @@ import { gregorianToShamsi, toShamsiDisplay } from '../utils/shamsi_data';
   selector: '[appShamsiDate]',
 })
 export class ShamsiDate implements OnChanges {
-    // ورودی به همون اسم selector → استفاده: [appJalaliDate]="..."
+   
   @Input('appShamsiDate') value: string = '';
 
 
